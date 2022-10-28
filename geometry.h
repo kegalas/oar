@@ -63,6 +63,9 @@ namespace geo{
             y = y_;
         }
 
+        template<class U> Vec<T,2>(Vec<U,3> const &);
+        template<class U> Vec<T,2>(Vec<U,4> const &);
+
         T& operator[](const size_t i){
             assert(i<2 && i>=0);
             return raw[i];
@@ -107,6 +110,9 @@ namespace geo{
             y = y_;
             z = z_;
         }
+
+        template<class U> Vec<T,3>(Vec<U,2> const &, U const);
+        template<class U> Vec<T,3>(Vec<U,4> const &);
 
         T& operator[](const size_t i){
             assert(i<3 && i>=0);
@@ -153,6 +159,9 @@ namespace geo{
             z = z_;
             w = w_;
         }
+
+        template<class U> Vec<T,4>(Vec<U,2> const &, U const, U const);
+        template<class U> Vec<T,4>(Vec<U,3> const &, U const);
 
         T& operator[](const size_t i){
             assert(i<4 && i>=0);
@@ -322,6 +331,12 @@ namespace geo{
         }
         return out;
     }
+
+    
+    Vec<int,3> toRGB(Vec<int,3> const & v);
+    Vec<int,3> toRGB(Vec<float,3> const & v);
+    Vec<int,4> toRGBA(Vec<int,4> const & v);
+    Vec<int,4> toRGBA(Vec<float,4> const & v);
 
 ////////////////////////////////////////////////////////////////////////////////
 
