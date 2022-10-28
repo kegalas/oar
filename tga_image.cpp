@@ -89,6 +89,11 @@ bool TGAImage::readFromFile(std::string const & dir){
 
     std::cerr << width << "x" << height << "/" << pixelSize*8 << "\n";
     ifs.close();
+
+    if(isFlipVertically){
+        flipVertically();
+    }
+
     return true;
 }
 

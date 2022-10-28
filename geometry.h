@@ -63,6 +63,7 @@ namespace geo{
             y = y_;
         }
 
+        template<class U> Vec<T,2>(Vec<U,2> const &);
         template<class U> Vec<T,2>(Vec<U,3> const &);
         template<class U> Vec<T,2>(Vec<U,4> const &);
 
@@ -112,6 +113,7 @@ namespace geo{
         }
 
         template<class U> Vec<T,3>(Vec<U,2> const &, U const);
+        template<class U> Vec<T,3>(Vec<U,3> const &);
         template<class U> Vec<T,3>(Vec<U,4> const &);
 
         T& operator[](const size_t i){
@@ -162,6 +164,7 @@ namespace geo{
 
         template<class U> Vec<T,4>(Vec<U,2> const &, U const, U const);
         template<class U> Vec<T,4>(Vec<U,3> const &, U const);
+        template<class U> Vec<T,4>(Vec<U,4> const &);
 
         T& operator[](const size_t i){
             assert(i<4 && i>=0);
