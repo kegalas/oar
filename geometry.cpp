@@ -141,7 +141,7 @@ geo::Vec<int,3>::Vec(geo::Vec<float, 2> const & v, float const z_){
 }
 
 template<> template<>
-geo::Vec<float,3>::Vec(geo::Vec<int, 3> const & v){
+geo::Vec<int,3>::Vec(geo::Vec<float, 3> const & v){
     x = static_cast<int>(v.x + 0.5f);
     y = static_cast<int>(v.y + 0.5f);
     z = static_cast<int>(v.z + 0.5f);

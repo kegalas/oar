@@ -17,6 +17,12 @@ namespace geo{
             }
         }
 
+        Vec(Vec<T,dim> const & v){
+            for(size_t i=0;i<dim;i++){
+                data_[i] = v[i];
+            }
+        }
+
         T& operator[](const size_t i){
             assert(i<dim && i>=0);
             return data_[i];
@@ -53,15 +59,11 @@ namespace geo{
             T raw[2];
         };
 
-        Vec<T,2>(){
-            x = T();
-            y = T();
-        }
+        Vec<T,2>():x(),y(){}
 
-        Vec<T,2>(T x_, T y_){
-            x = x_;
-            y = y_;
-        }
+        Vec<T,2>(T x_, T y_):x(x_),y(y_){}
+
+        Vec<T,2>(Vec<T,2> const & v):x(v.x),y(v.y){}
 
         template<class U> Vec<T,2>(Vec<U,2> const &);
         template<class U> Vec<T,2>(Vec<U,3> const &);
@@ -100,17 +102,11 @@ namespace geo{
             T raw[3];
         };
 
-        Vec<T,3>(){
-            x = T();
-            y = T();
-            z = T();
-        }
+        Vec<T,3>():x(),y(),z(){}
 
-        Vec<T,3>(T x_, T y_, T z_){
-            x = x_;
-            y = y_;
-            z = z_;
-        }
+        Vec<T,3>(T x_, T y_, T z_):x(x_),y(y_),z(z_){}
+
+        Vec<T,3>(Vec<T,3> const & v):x(v.x),y(v.y),z(v.z){}
 
         template<class U> Vec<T,3>(Vec<U,2> const &, U const);
         template<class U> Vec<T,3>(Vec<U,3> const &);
@@ -148,19 +144,11 @@ namespace geo{
             T raw[4];
         };
 
-        Vec<T,4>(){
-            x = T();
-            y = T();
-            z = T();
-            w = T();
-        }
+        Vec<T,4>():x(),y(),z(),w(){}
 
-        Vec<T,4>(T x_, T y_, T z_, T w_){
-            x = x_;
-            y = y_;
-            z = z_;
-            w = w_;
-        }
+        Vec<T,4>(T x_, T y_, T z_, T w_):x(x_),y(y_),z(z_),w(w_){}
+
+        Vec<T,4>(Vec<T,4> const & v):x(v.x),y(v.y),z(v.z),w(v.w){}
 
         template<class U> Vec<T,4>(Vec<U,2> const &, U const, U const);
         template<class U> Vec<T,4>(Vec<U,3> const &, U const);
@@ -360,6 +348,12 @@ namespace geo{
             size_t minDim = std::min(nRow, nCol);
             for(size_t i=0 ; i<minDim ; i++){
                 rowVec[i][i] = value;
+            }
+        }
+
+        Mat<T, nRow, nCol>(Mat<T, nRow, nCol> const & m){
+            for(size_t i=0 ; i<nRow ; i++){
+                rowVec[i] = m[i];
             }
         }
 
