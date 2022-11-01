@@ -28,8 +28,8 @@ struct TGAHeader{
     std::uint16_t yOffset{};      //y坐标的起始位置
     std::uint16_t width{};        //图形宽度
     std::uint16_t height{};       //图像高度
-    std::uint8_t pixelDepth{};   //图像每一个像素占用的位数，例如RGB为24位，RGBA为32位
-    std::uint8_t descriptor{};   //图像描述信息，可见http://paulbourke.net/dataformats/tga/
+    std::uint8_t  pixelDepth{};   //图像每一个像素占用的位数，例如RGB为24位，RGBA为32位
+    std::uint8_t  descriptor{};   //图像描述信息，可见http://paulbourke.net/dataformats/tga/
 
     TGAHeader(){}
     TGAHeader(unsigned int type, std::uint16_t width_, std::uint16_t height_){
@@ -53,10 +53,10 @@ struct TGAHeader{
         height = height_;
 
         if(type == TGAType::grey || type == TGAType::rgb){
-            descriptor = 0;
+            descriptor |= 0x00;
         }
         else if(type == TGAType::rgba){
-            descriptor = 8;
+            descriptor |= 0x08;
         }
     }
 
@@ -80,11 +80,11 @@ struct TGAFooter{
 
 class TGAImage{
 private:
-    std::uint16_t width;
-    std::uint16_t height;
-    std::uint8_t  *data;
-    unsigned int  type;
-    bool isFlipVertically;
+    std::uint16_t   width;
+    std::uint16_t   height;
+    std::uint8_t    *data;
+    unsigned int    type;
+    bool            isFlipVertically;
 
 public:
     TGAImage(std::uint16_t const width_, std::uint16_t const height_, unsigned int const type_);

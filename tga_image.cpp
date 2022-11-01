@@ -4,11 +4,11 @@
 #include "tga_image.h"
 
 TGAImage::TGAImage(std::uint16_t const width_, std::uint16_t const height_, unsigned int const type_){
-    width  = width_;
-    height = height_;
-    type   = type_;
-    data   = new std::uint8_t[width*height*TGAType::pixelSize[type]];
-    isFlipVertically = 0;
+    width               = width_;
+    height              = height_;
+    type                = type_;
+    data                = new std::uint8_t[width*height*TGAType::pixelSize[type]];
+    isFlipVertically    = 0;
 }
 
 TGAImage::TGAImage(std::string const & dir){
@@ -111,6 +111,7 @@ bool TGAImage::writeToFile(std::string const & dir){
     if(isFlipVertically){
         header.descriptor |= 0x20;
     }
+
     ofs.write(reinterpret_cast<char *>(&header), sizeof(header));
     if(!ofs.good()){
         std::cerr << "An error occured while writing the header. File: " << dir << "\n";

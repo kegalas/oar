@@ -487,7 +487,6 @@ namespace geo{
 
         for(size_t i=0;i<dim;i++){  
             ret += cofactor(mat, 0, i) * mat[0][i];
-            //ret += static_cast<T>(i%2?-1:1) * det(getMinor(mat, 0, i)); 
         }
 
         return ret;
