@@ -218,30 +218,8 @@ geo::Vec<int,2>::Vec(geo::Vec<float, 4> const & v){
 
 ////////////////////////////////////////////////////////////////////////////////
 
-geo::Vec<int,3> geo::toRGB(geo::Vec<int,3> const & v){
-    geo::Vec<int,3> ret;
-    for(int i=0;i<3;i++){
-        if(v[i]<0) ret[i] = 0;
-        else if(v[i]>255) ret[i] = 255;
-        else ret[i] = v[i];
-    }
-
-    return ret;
-}
-
-geo::Vec<int,3> geo::toRGB(geo::Vec<float,3> const & v){
-    geo::Vec<int,3> ret;
-    for(int i=0;i<3;i++){
-        ret[i] = static_cast<int>(v[i]*255.f+0.5f);
-        if (ret[i]<0) ret[i] = 0;
-        else if(ret[i]>255) ret[i] = 255;
-    }
-
-    return ret;
-}
-
-geo::Vec<int,4> geo::toRGBA(geo::Vec<int,4> const & v){
-    geo::Vec<int,4> ret;
+geo::Vec<int,4> geo::toOARColor(geo::Vec<int,4> const & v){
+    OARColor ret;
     for(int i=0;i<4;i++){
         if(v[i]<0) ret[i] = 0;
         else if(v[i]>255) ret[i] = 255;
@@ -251,13 +229,61 @@ geo::Vec<int,4> geo::toRGBA(geo::Vec<int,4> const & v){
     return ret;
 }
 
-geo::Vec<int,4> geo::toRGBA(geo::Vec<float,4> const & v){
-    Vec<int,4> ret;
+geo::Vec<int,4> geo::toOARColor(geo::Vec<float,4> const & v){
+    OARColor ret;
     for(int i=0;i<4;i++){
         ret[i] = static_cast<int>(v[i]*255.f+0.5f);
         if (ret[i]<0) ret[i] = 0;
         else if(ret[i]>255) ret[i] = 255;
     }
+
+    return ret;
+}
+
+geo::Vec<int,4> geo::toOARColor(geo::Vec<int,3> const & v){
+    OARColor ret;
+    for(int i=0;i<3;i++){
+        if(v[i]<0) ret[i] = 0;
+        else if(v[i]>255) ret[i] = 255;
+        else ret[i] = v[i];
+    }
+    ret[3] = 255;
+
+    return ret;
+}
+
+geo::Vec<int,4> geo::toOARColor(geo::Vec<float,3> const & v){
+    OARColor ret;
+    for(int i=0;i<3;i++){
+        ret[i] = static_cast<int>(v[i]*255.f+0.5f);
+        if (ret[i]<0) ret[i] = 0;
+        else if(ret[i]>255) ret[i] = 255;
+    }
+    ret[3] = 255;
+
+    return ret;
+}
+
+geo::Vec<int,4> geo::toOARColor(int const & v){
+    OARColor ret;
+    for(int i=0;i<3;i++){
+        if(v<0) ret[i] = 0;
+        else if(v>255) ret[i] = 255;
+        else ret[i] = v;
+    }
+    ret[3] = 255;
+
+    return ret;
+}
+
+geo::Vec<int,4> geo::toOARColor(float const & v){
+    OARColor ret;
+    for(int i=0;i<3;i++){
+        ret[i] = static_cast<int>(v*255.f+0.5f);
+        if (ret[i]<0) ret[i] = 0;
+        else if(ret[i]>255) ret[i] = 255;
+    }
+    ret[3] = 255;
 
     return ret;
 }

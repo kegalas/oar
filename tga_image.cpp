@@ -141,36 +141,7 @@ bool TGAImage::writeToFile(std::string const & dir){
     return true;
 }
 
-bool TGAImage::setFragment(std::uint16_t const x, std::uint16_t const y, geo::vec3i const & color){
-    assert(x>=0 && x<width && y>=0 && y<height);
-    assert(color.r>=0 && color.r<=255);
-    assert(color.g>=0 && color.g<=255);
-    assert(color.b>=0 && color.b<=255);
-
-    int pixelSize = TGAType::pixelSize[type];
-    size_t index = (y*width + x)*pixelSize;
-
-    if(type==TGAType::grey){
-        data[index] = (color.r+color.g+color.b)/3;
-    }
-    else if(type==TGAType::rgb || type==TGAType::rgba){
-        data[index] = color.b;
-        data[index+1] = color.g;
-        data[index+2] = color.r;
-
-        if(type==TGAType::rgba){
-            data[index+3] = 0xFF;
-        }
-    }
-    else{
-        std::cerr<<"An error occured while set fragment\n";
-        return false;
-    }
-
-    return true;
-}
-
-bool TGAImage::setFragment(std::uint16_t const x, std::uint16_t const y, geo::vec4i const & color){
+bool TGAImage::setFragment(std::uint16_t const x, std::uint16_t const y, geo::OARColor const & color){
     assert(x>=0 && x<width && y>=0 && y<height);
     assert(color.r>=0 && color.r<=255);
     assert(color.g>=0 && color.g<=255);

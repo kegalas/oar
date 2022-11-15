@@ -323,11 +323,12 @@ namespace geo{
         return out;
     }
 
-    
-    Vec<int,3> toRGB(Vec<int,3> const & v);
-    Vec<int,3> toRGB(Vec<float,3> const & v);
-    Vec<int,4> toRGBA(Vec<int,4> const & v);
-    Vec<int,4> toRGBA(Vec<float,4> const & v);
+    Vec<int,4> toOARColor(int const & v);
+    Vec<int,4> toOARColor(float const & v);
+    Vec<int,4> toOARColor(Vec<int,3> const & v);
+    Vec<int,4> toOARColor(Vec<float,3> const & v);
+    Vec<int,4> toOARColor(Vec<int,4> const & v);
+    Vec<int,4> toOARColor(Vec<float,4> const & v);
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -546,6 +547,7 @@ namespace geo{
     typedef Vec<int,2> vec2i;
     typedef Vec<int,3> vec3i;
     typedef Vec<int,4> vec4i;
+    typedef Vec<int,4> OARColor;
 
     typedef Mat<float, 4, 4> mat4f;
     typedef Mat<int, 4, 4> mat3f;
