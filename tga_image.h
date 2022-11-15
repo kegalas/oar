@@ -93,8 +93,7 @@ public:
 
     bool readFromFile(std::string const & dir);
     bool writeToFile(std::string const & dir);
-    bool setFragment(std::uint16_t const x, std::uint16_t const y, geo::vec3i const & color);
-    bool setFragment(std::uint16_t const x, std::uint16_t const y, geo::vec4i const & color);
+    bool setFragment(std::uint16_t const x, std::uint16_t const y, geo::OARColor const & color);
     bool flipVertically();
 
 };
