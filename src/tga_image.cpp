@@ -154,6 +154,7 @@ bool TGAImage::setFragment(std::uint16_t const x, std::uint16_t const y, geo::OA
     size_t index = (y*width + x)*pixelSize;
 
     if(type==TGAType::grey){
+        //data[index] = static_cast<std::uint8_t> (color.r/3.0+color.g/3.0+color.b/3.0+0.5);
         data[index] = (color.r+color.g+color.b)/3;
     }
     else if(type==TGAType::rgb || type==TGAType::rgba){
