@@ -95,6 +95,8 @@ public:
     bool writeToFile(std::string const & dir);
     bool setFragment(std::uint16_t const x, std::uint16_t const y, geo::OARColor const & color);
     bool flipVertically();
+    inline std::uint16_t getWidth(){return width;}
+    inline std::uint16_t getHeight(){return height;}
 
 };
 

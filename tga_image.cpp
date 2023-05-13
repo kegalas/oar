@@ -1,5 +1,6 @@
 #include <fstream>
 #include <cassert>
+#include <cstring>
 
 #include "tga_image.h"
 
@@ -9,6 +10,7 @@ TGAImage::TGAImage(std::uint16_t const width_, std::uint16_t const height_, unsi
     type                = type_;
     data                = new std::uint8_t[width*height*TGAType::pixelSize[type]];
     isFlipVertically    = 0;
+    std::memset(data,0,sizeof(data));
 }
 
 TGAImage::TGAImage(std::string const & dir){

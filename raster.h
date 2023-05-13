@@ -5,8 +5,8 @@
 #include "geometry.h"
 
 namespace ras{
-    void line(TGAImage & image, geo::vec2i points[], geo::vec4i colors[]);
-    void triangle(TGAImage & image, geo::vec2i points[], geo::vec4i colors[]);
+    bool line(TGAImage & image, geo::vec2i points[], geo::OARColor const & color);
+    bool triangle(TGAImage & image, geo::vec2i points[], geo::OARColor colors[]);
 }//namespace res
 
 #endif
