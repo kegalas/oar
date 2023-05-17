@@ -36,3 +36,4 @@
 
 *.~undo-tree~
 *.user
+CMakeLists.txt.user

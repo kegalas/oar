@@ -5,6 +5,7 @@
 #include <cstddef>
 #include <cmath>
 #include <iostream>
+#include <tuple>
 
 namespace geo{
 ////////////////////////////////////////////////////////////////////////////////
@@ -551,6 +552,11 @@ namespace geo{
 
     typedef Mat<float, 4, 4> mat4f;
     typedef Mat<int, 4, 4> mat3f;
+
+////////////////////////////////////////////////////////////////////////////////
+
+    std::tuple<float,float,float> getBarycentric(geo::vec2f points[], float x, float y);
+    std::tuple<float,float,float> getBarycentric(geo::vec2i points[], int x_, int y_);
 
 }//namespace geo
 

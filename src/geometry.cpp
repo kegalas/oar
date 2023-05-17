@@ -287,3 +287,27 @@ geo::Vec<int,4> geo::toOARColor(float const & v){
 
     return ret;
 }
+
+std::tuple<float,float,float> geo::getBarycentric(geo::vec2f points[], float x, float y){
+    geo::vec2f const & pa = points[0];
+    geo::vec2f const & pb = points[1];
+    geo::vec2f const & pc = points[2];
+
+    // Fundamentals of Computer Graphics(Fifth Edition), P52
+    float beta = ((pa.y-pc.y)*x + (pc.x-pa.x)*y + pa.x*pc.y - pc.x*pa.y) / ((pa.y-pc.y)*pb.x + (pc.x-pa.x)*pb.y + pa.x*pc.y - pc.x*pa.y);
+    float gamma = ((pa.y-pb.y)*x + (pb.x-pa.x)*y + pa.x*pb.y - pb.x*pa.y) / ((pa.y-pb.y)*pc.x + (pb.x-pa.x)*pc.y + pa.x*pb.y - pb.x*pa.y);
+    float alpha = 1.f - beta - gamma;
+    return std::tuple<float,float,float>(alpha,beta,gamma);
+}
+
+std::tuple<float,float,float> geo::getBarycentric(geo::vec2i points[], int x_, int y_){
+    float x = static_cast<float>(x_), y = static_cast<float>(y_);
+    geo::vec2f const & pa = static_cast<geo::vec2f >(points[0]);
+    geo::vec2f const & pb = static_cast<geo::vec2f >(points[1]);
+    geo::vec2f const & pc = static_cast<geo::vec2f >(points[2]);
+
+    float beta = ((pa.y-pc.y)*x + (pc.x-pa.x)*y + pa.x*pc.y - pc.x*pa.y) / ((pa.y-pc.y)*pb.x + (pc.x-pa.x)*pb.y + pa.x*pc.y - pc.x*pa.y);
+    float gamma = ((pa.y-pb.y)*x + (pb.x-pa.x)*y + pa.x*pb.y - pb.x*pa.y) / ((pa.y-pb.y)*pc.x + (pb.x-pa.x)*pc.y + pa.x*pb.y - pb.x*pa.y);
+    float alpha = 1.f - beta - gamma;
+    return std::tuple<float,float,float>(alpha,beta,gamma);
+}

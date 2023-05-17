@@ -10,7 +10,7 @@ TGAImage::TGAImage(std::uint16_t const width_, std::uint16_t const height_, unsi
     type                = type_;
     data                = new std::uint8_t[width*height*TGAType::pixelSize[type]];
     isFlipVertically    = 0;
-    std::memset(data,0,sizeof(data));
+    std::fill(data,data+width*height*TGAType::pixelSize[type],0);
 }
 
 TGAImage::TGAImage(std::string const & dir){
@@ -154,8 +154,7 @@ bool TGAImage::setFragment(std::uint16_t const x, std::uint16_t const y, geo::OA
     size_t index = (y*width + x)*pixelSize;
 
     if(type==TGAType::grey){
-        //data[index] = static_cast<std::uint8_t> (color.r/3.0+color.g/3.0+color.b/3.0+0.5);
-        data[index] = (color.r+color.g+color.b)/3;
+        data[index] = static_cast<std::uint8_t> (color.r/3.0+color.g/3.0+color.b/3.0+0.5);
     }
     else if(type==TGAType::rgb || type==TGAType::rgba){
         data[index] = color.b;
