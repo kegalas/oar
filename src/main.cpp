@@ -1,30 +1,42 @@
 #include "tga_image.h"
 #include "raster.h"
+#include "model.h"
+#include <ctime>
+#include <cstdlib>
+
+geo::vec3f light = {0.0,0.0,-1.0};
 
 int main(){
-    /*
-    TGAImage image("./test.tga");
-    image.flipVertically();
-    image.writeToFile("./ttt.tga");
-    */
 
-    TGAImage image(100,100,TGAType::rgb);
+    geo::normalize(light);
+    Model model("../obj/african_head.obj");
+    TGAImage image(1500,1500,TGAType::rgb);
+    int nface = model.getFaceSize();
+    std::array<geo::vec3f,3> vert;
+    std::array<geo::vec3f,3> norm;
+    std::array<geo::vec2i,3>  screen;
+    std::array<geo::OARColor,3> color;
+    for(int i=0;i<nface;i++){
+        model.getTriangle(vert, i);
+        model.getNorm(norm,i);
 
-    geo::vec2i pts0[2] = {geo::vec2i(99,0),geo::vec2i(0,99)};
-    ras::line(image, pts0, geo::OARColor(255,0,0,255));
-    
-    for(int i=0;i<=99;i+=10){
-        pts0[0] = geo::vec2i(i,0);
-        ras::line(image, pts0, geo::OARColor(255,0,0,255));
+        bool check = 1;
+        for(int j=0;j<3;j++){
+            screen[j] = geo::vec2i((vert[j].x+1.f)*image.getWidth()*.5f+.5f,
+                                   (vert[j].y+1.f)*image.getHeight()*.5f+.5f);
+            geo::normalize(norm[j]);
+
+            float intensity = geo::dot(norm[j]*(-1.f),light);
+            if(intensity<0.f || intensity>1.f){
+                check = 0;
+                break;
+            }
+            color[j] = geo::OARColor(intensity*255+.5f,intensity*255+.5f,intensity*255+.5f,255);
+        }
+        if(check) ras::triangle(image,screen,color);
     }
-    
-    image.writeToFile("./line.tga");
+    image.writeToFile("./af.tga");
 
-    TGAImage image2(100,100,TGAType::rgb);
-    geo::vec2i pts1[3] = {geo::vec2i(60,5),geo::vec2i(5,60),geo::vec2i(70,90)};
-    geo::OARColor colors[3] = {geo::OARColor(255,0,0,255),geo::OARColor(0,255,0,255),geo::OARColor(0,0,255,255)};
-    ras::triangle(image2,pts1,colors);
-    image2.writeToFile("./triangle.tga");
 
     return 0;
 }

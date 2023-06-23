@@ -143,18 +143,19 @@ bool TGAImage::writeToFile(std::string const & dir){
     return true;
 }
 
-bool TGAImage::setFragment(std::uint16_t const x, std::uint16_t const y, geo::OARColor const & color){
-    assert(x>=0 && x<width && y>=0 && y<height);
-    assert(color.r>=0 && color.r<=255);
-    assert(color.g>=0 && color.g<=255);
-    assert(color.b>=0 && color.b<=255);
-    assert(color.a>=0 && color.a<=255);
+bool TGAImage::setFragment(std::uint16_t x, std::uint16_t y, geo::OARColor color){
+    x = std::max(std::uint16_t(0),x);x = std::min(std::uint16_t(width-1),x);
+    y = std::max(std::uint16_t(0),y);y = std::min(std::uint16_t(height-1),y);
+    color.r = std::max(0,color.r);color.r = std::min(255,color.r);
+    color.g = std::max(0,color.g);color.g = std::min(255,color.g);
+    color.b = std::max(0,color.b);color.b = std::min(255,color.b);
+    color.a = std::max(0,color.a);color.a = std::min(255,color.a);
 
     int pixelSize = TGAType::pixelSize[type];
     size_t index = (y*width + x)*pixelSize;
 
     if(type==TGAType::grey){
-        data[index] = static_cast<std::uint8_t> (color.r/3.0+color.g/3.0+color.b/3.0+0.5);
+        data[index] = static_cast<std::uint8_t> (color.r/3.0f+color.g/3.0f+color.b/3.0f+0.5f);
     }
     else if(type==TGAType::rgb || type==TGAType::rgba){
         data[index] = color.b;

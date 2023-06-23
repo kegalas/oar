@@ -3,10 +3,20 @@
 
 #include "tga_image.h"
 #include "geometry.h"
+#include <array>
 
 namespace ras{
-    bool line(TGAImage & image, geo::vec2i points[], geo::OARColor const & color);
-    bool triangle(TGAImage & image, geo::vec2i points[], geo::OARColor colors[]);
+    bool line(
+            TGAImage & image,
+            std::array<geo::vec2i,2> points,
+            geo::OARColor const & color
+    );
+
+    bool triangle(
+            TGAImage & image,
+            std::array<geo::vec2i,3> const & points,
+            std::array<geo::OARColor,3> const & colors
+    );
 }//namespace res
 
 #endif

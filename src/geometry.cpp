@@ -1,6 +1,12 @@
 #include "geometry.h"
 
 ////////////////////////////////////////////////////////////////////////////////
+// TODO: use a more generic function to implement type conversion of geo::Vec
+
+//template<size_t U,size_t V>
+//geo::Vec<int,U>::Vec(geo::Vec<int,V> const & v, std::initializer_list<int> const & iList){
+
+//}
 
 template<> template<>
 geo::Vec<float,4>::Vec(geo::Vec<float, 2> const & v, float const z_, float const w_){
@@ -288,26 +294,115 @@ geo::Vec<int,4> geo::toOARColor(float const & v){
     return ret;
 }
 
-std::tuple<float,float,float> geo::getBarycentric(geo::vec2f points[], float x, float y){
-    geo::vec2f const & pa = points[0];
-    geo::vec2f const & pb = points[1];
-    geo::vec2f const & pc = points[2];
-
+std::tuple<float,float,float> geo::getBarycentric(
+    std::array<geo::vec2f,3> const & tri,
+    geo::vec2f pt
+){
     // Fundamentals of Computer Graphics(Fifth Edition), P52
-    float beta = ((pa.y-pc.y)*x + (pc.x-pa.x)*y + pa.x*pc.y - pc.x*pa.y) / ((pa.y-pc.y)*pb.x + (pc.x-pa.x)*pb.y + pa.x*pc.y - pc.x*pa.y);
-    float gamma = ((pa.y-pb.y)*x + (pb.x-pa.x)*y + pa.x*pb.y - pb.x*pa.y) / ((pa.y-pb.y)*pc.x + (pb.x-pa.x)*pc.y + pa.x*pb.y - pb.x*pa.y);
+    // https://kegalas.top/p/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/#%E9%87%8D%E5%BF%83%E5%9D%90%E6%A0%87%E7%B3%BB
+    geo::vec2f pa = pt-tri[0];
+    geo::vec2f ab = tri[0]-tri[1];
+    geo::vec2f ac = tri[0]-tri[2];
+    geo::vec3f v1 = geo::vec3f(pa.x,ab.x,ac.x);
+    geo::vec3f v2 = geo::vec3f(pa.y,ab.y,ac.y);
+    geo::vec3f v = geo::cross(v1,v2);
+    v = v/v.x;
+
+    float beta = v.y;
+    float gamma = v.z;
     float alpha = 1.f - beta - gamma;
     return std::tuple<float,float,float>(alpha,beta,gamma);
 }
 
-std::tuple<float,float,float> geo::getBarycentric(geo::vec2i points[], int x_, int y_){
-    float x = static_cast<float>(x_), y = static_cast<float>(y_);
-    geo::vec2f const & pa = static_cast<geo::vec2f >(points[0]);
-    geo::vec2f const & pb = static_cast<geo::vec2f >(points[1]);
-    geo::vec2f const & pc = static_cast<geo::vec2f >(points[2]);
+std::tuple<float,float,float> geo::getBarycentric(
+    std::array<geo::vec2i,3> const & tri,
+    geo::vec2i pt
+){
+    geo::vec2i pa = pt-tri[0];
+    geo::vec2i ab = tri[0]-tri[1];
+    geo::vec2i ac = tri[0]-tri[2];
+    geo::vec3f v1 = geo::vec3f(pa.x*1.f,ab.x*1.f,ac.x*1.f);
+    geo::vec3f v2 = geo::vec3f(pa.y*1.f,ab.y*1.f,ac.y*1.f);
+    geo::vec3f v = geo::cross(v1,v2);
+    v = v/v.x;
 
-    float beta = ((pa.y-pc.y)*x + (pc.x-pa.x)*y + pa.x*pc.y - pc.x*pa.y) / ((pa.y-pc.y)*pb.x + (pc.x-pa.x)*pb.y + pa.x*pc.y - pc.x*pa.y);
-    float gamma = ((pa.y-pb.y)*x + (pb.x-pa.x)*y + pa.x*pb.y - pb.x*pa.y) / ((pa.y-pb.y)*pc.x + (pb.x-pa.x)*pc.y + pa.x*pb.y - pb.x*pa.y);
+    float beta = v.y;
+    float gamma = v.z;
     float alpha = 1.f - beta - gamma;
     return std::tuple<float,float,float>(alpha,beta,gamma);
+}
+
+geo::mat4f geo::translate(vec3f const & v){
+    mat4f ret;
+    ret[0][3] += v.x;
+    ret[1][3] += v.y;
+    ret[2][3] += v.z;
+    ret = ret;
+
+    return ret;
+}
+
+geo::mat4f geo::scale(float t){
+    mat4f ret;
+    ret[0][0] = t;
+    ret[1][1] = t;
+    ret[2][2] = t;
+
+    return ret;
+}
+
+geo::mat4f geo::rotate( float angle, vec3f const & v){
+    mat4f ret;
+
+    return ret;
+}
+
+geo::mat4f geo::viewport(int width, int height){
+    mat4f ret;
+    ret[0][0] = width/2.f;
+    ret[1][1] = height/2.f;
+    ret[0][3] = (width-1)/2.f;
+    ret[1][3] = (height-1)/2.f;
+
+    return ret;
+}
+
+geo::mat4f geo::orthographic(float left, float right, float top, float bottom, float near, float far){
+    mat4f ret;
+
+    ret[0][0] = 2.f/(right-left);
+    ret[1][1] = 2.f/(top-bottom);
+    ret[2][2] = 2.f/(near-far);
+
+    ret[0][3] = -(right+left)/(right-left);
+    ret[1][3] = -(top+bottom)/(top-bottom);
+    ret[2][3] = -(near+far)/(near-far);
+
+    return ret;
+}
+
+geo::mat4f geo::cameraView(vec3f const & pos, vec3f const & gaze, vec3f const & up){
+    mat4f trans,ro;
+    trans[0][3] = -pos.x;
+    trans[1][3] = -pos.y;
+    trans[2][3] = -pos.z;
+
+    vec3f tmp = geo::cross(gaze,up);
+    ro[0][0] = tmp.x;ro[0][1] = tmp.y;ro[0][2] = tmp.z;
+    ro[1][0] = up.x;ro[1][1] = up.y;ro[1][2] = up.z;
+    ro[2][0] = -gaze.x;ro[2][1] = -gaze.y;ro[2][2] = -gaze.z;
+
+
+    return ro*trans;
+}
+
+geo::mat4f geo::prospective(float near, float far){
+    mat4f ret;
+
+    ret[0][0] = near;
+    ret[1][1] = near;
+    ret[2][2] = near+far;
+    ret[2][3] = -far*near;
+
+    return ret;
 }
