@@ -71,6 +71,13 @@ bool Model::getTriangle(std::array<geo::vec3f,3> & dist, size_t faceid){
     return true;
 }
 
+bool Model::getTriangle(std::array<geo::vec4f,3> & dist, size_t faceid){
+    for(int i=0;i<3;i++){
+        dist[i] = geo::vec4f(vertices[face_vi[faceid*3+i]],1.f);
+    }
+    return true;
+}
+
 bool Model::getNorm(std::array<geo::vec3f,3> & dist, size_t faceid){
     for(int i=0;i<3;i++){
         dist[i] = norms[face_ni[faceid*3+i]];

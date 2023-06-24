@@ -22,6 +22,7 @@ public:
     size_t getFaceSize();
     geo::vec3f getVert(size_t faceid, size_t nth);
     bool getTriangle(std::array<geo::vec3f,3> & dist, size_t faceid);
+    bool getTriangle(std::array<geo::vec4f,3> & dist, size_t faceid);
     bool getNorm(std::array<geo::vec3f,3> & dist, size_t faceid);
 };
 
