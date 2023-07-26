@@ -174,9 +174,9 @@ bool TGAImage::setFragment(std::uint16_t x, std::uint16_t y, geo::OARColor color
     return true;
 }
 
-geo::OARColor TGAImage::getFragment(std::uint16_t x, std::uint16_t y){
+//geo::OARColor TGAImage::getFragment(std::uint16_t x, std::uint16_t y){
 
-}
+//}
 
 bool TGAImage::flipVertically(){
     int pixelSize = TGAType::pixelSize[type];
