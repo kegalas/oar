@@ -166,6 +166,6 @@ bool ras::triangle(
 //    return true;
 //}
 
-inline geo::vec2i ras::world2screen(geo::vec4f v, int width, int height){
+geo::vec2i ras::world2screen(geo::vec4f v, int width, int height){
     return geo::vec2i(int((v.x+1.f)*width*.5f+.5f), int((v.y+1.f)*height*.5f+.5f));
 }

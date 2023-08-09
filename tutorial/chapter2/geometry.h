@@ -6,7 +6,6 @@
 #include <cmath>
 #include <iostream>
 #include <tuple>
-#include <array>
 
 namespace geo{
 ////////////////////////////////////////////////////////////////////////////////
@@ -23,29 +22,6 @@ namespace geo{
             for(size_t i=0;i<dim;i++){
                 data_[i] = v[i];
             }
-        }
-
-        Vec(std::initializer_list<T> const & ilist){// TODO 这两个写到教程中
-            size_t size = ilist.size();
-            size_t i=0;
-            for(;i<dim && i<size;i++){
-                data_[i] = *(ilist.begin()+i);
-            }
-            std::fill(data_+i,data_+dim,0);
-        }
-
-        template<size_t U>
-        Vec(Vec<T,U> const & v, std::initializer_list<T> const & ilist){
-            size_t size = ilist.size();
-            size_t i = 0;
-            for(i=0;i<U && i<dim;i++){
-                data_[i] = v[i];
-            }
-            size_t init = i;
-            for(;i<dim && i-init<size;i++){
-                data_[i] = *(ilist.begin()+i-init);
-            }
-            std::fill(data_+i,data_+dim,0);
         }
 
         T& operator[](const size_t i){
@@ -578,25 +554,6 @@ namespace geo{
     typedef Mat<int, 4, 4> mat3f;
 
 ////////////////////////////////////////////////////////////////////////////////
-
-    std::tuple<float,float,float> getBarycentric(
-        std::array<geo::vec2f,3> const & tri,
-        geo::vec2f pt);
-
-    std::tuple<float,float,float> getBarycentric(
-        std::array<geo::vec2i,3> const & tri,
-        geo::vec2i pt);
-
-////////////////////////////////////////////////////////////////////////////////
-
-    mat4f translate(vec3f const & v);
-    mat4f scale(float t);
-    mat4f rotate(float angle, vec3f const & v);
-
-    mat4f viewport(int width, int height);
-    mat4f orthographic(float left, float right, float top, float bottom, float near, float far);
-    mat4f cameraView(vec3f const & pos, vec3f const & gaze, vec3f const & up);
-    mat4f prospective(float near, float far);
 
 }//namespace geo
 

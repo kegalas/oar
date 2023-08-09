@@ -29,7 +29,7 @@ namespace ras{
 
 //    bool deleteZBuffer(float *zb);
 
-    inline geo::vec2i world2screen(geo::vec4f v, int width, int height);
+    geo::vec2i world2screen(geo::vec4f v, int width, int height);
 }//namespace res
 
 #endif
