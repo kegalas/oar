@@ -590,15 +590,6 @@ namespace geo{
 
 ////////////////////////////////////////////////////////////////////////////////
 
-    mat4f translate(vec3f const & v);
-    mat4f scale(float t);
-    mat4f rotate(float angle, vec3f const & v);
-
-    mat4f viewport(int width, int height);
-    mat4f orthographic(float left, float right, float top, float bottom, float near, float far);
-    mat4f cameraView(vec3f const & pos, vec3f const & gaze, vec3f const & up);
-    mat4f prospective(float near, float far);
-
 }//namespace geo
 
 #endif
