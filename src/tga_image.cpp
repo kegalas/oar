@@ -4,12 +4,13 @@
 
 #include "tga_image.h"
 
-TGAImage::TGAImage(std::uint16_t const width_, std::uint16_t const height_, unsigned int const type_){
-    width               = width_;
-    height              = height_;
-    type                = type_;
-    data                = new std::uint8_t[width*height*TGAType::pixelSize[type]];
-    isFlipVertically    = 0;
+TGAImage::TGAImage(std::uint16_t const width_, std::uint16_t const height_, unsigned int const type_):
+    width(width_),
+    height(height_),
+    type(type_),
+    isFlipVertically(0){
+
+    data = new std::uint8_t[width*height*TGAType::pixelSize[type]];
     std::fill(data,data+width*height*TGAType::pixelSize[type],0);
 }
 

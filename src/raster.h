@@ -21,6 +21,12 @@ namespace ras{
     bool triangle(
         TGAImage & image,
         std::array<geo::vec4f,3> const & points,
+        std::array<geo::OARColor,3> const & colors
+    );
+
+    bool triangle(
+        TGAImage & image,
+        std::array<geo::vec4f,3> const & points,
         std::array<geo::OARColor,3> const & colors,
         float zbuffer[]
     );

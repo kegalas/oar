@@ -94,6 +94,52 @@ bool ras::triangle(
 bool ras::triangle(
     TGAImage & image,
     std::array<geo::vec4f,3> const & points,
+    std::array<geo::OARColor,3> const & colors
+){
+    float const EPS = 1e-5;
+    int width = image.getWidth(), height = image.getHeight();
+
+    std::array<geo::vec2i,3> screenPoints;
+
+    for(int i=0;i<3;i++){
+        screenPoints[i][0] = (int)(points[i][0]+.5f);
+        screenPoints[i][1] = (int)(points[i][1]+.5f);
+    }
+
+    int maxx = 0, minx = width-1, maxy = 0, miny = height-1;
+    for(int i=0;i<3;i++){
+        maxx = std::max(maxx, screenPoints[i].x);
+        minx = std::min(minx, screenPoints[i].x);
+        maxy = std::max(maxy, screenPoints[i].y);
+        miny = std::min(miny, screenPoints[i].y);
+    }
+    maxx = std::min(maxx, width-1);
+    minx = std::max(minx, 0);
+    maxy = std::min(maxy, height-1);
+    miny = std::max(miny, 0);
+
+    for(int x=minx;x<=maxx;x++){
+        for(int y=miny;y<=maxy;y++){
+            std::tuple<float,float,float> ret = geo::getBarycentric(screenPoints, geo::vec2i(x,y));
+            float alpha = std::get<0> (ret);
+            float beta  = std::get<1> (ret);
+            float gamma = std::get<2> (ret);
+            if(alpha<-EPS || beta<-EPS || gamma<-EPS) continue;
+
+            geo::OARColor color = geo::vec4i(
+                alpha*geo::vec4f(colors[0]) +
+                beta*geo::vec4f(colors[1]) +
+                gamma*geo::vec4f(colors[2]));
+            image.setFragment(x,y,color);
+        }
+    }
+
+    return true;
+}
+
+bool ras::triangle(
+    TGAImage & image,
+    std::array<geo::vec4f,3> const & points,
     std::array<geo::OARColor,3> const & colors,
     float zbuffer[]
 ){

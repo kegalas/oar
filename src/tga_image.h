@@ -18,21 +18,33 @@ namespace TGAType{
 #pragma pack(1)
 
 struct TGAHeader{
-    std::uint8_t  length = 0;       //TGA图像Identification Field的长度
-    std::uint8_t  colorMapType = 0; //0：不使用颜色表，1：使用颜色表
-    std::uint8_t  imageType = 0;    //图像类型，2代表未压缩的真彩色图像，3代表未压缩的黑白图像
-    std::uint16_t cMapStart = 0;    //颜色表首地址
-    std::uint16_t cMapLength = 0;   //颜色表长度
-    std::uint8_t  cMapDepth = 0;    //颜色表位数
-    std::uint16_t xOffset = 0;      //x坐标的起始位置
-    std::uint16_t yOffset = 0;      //y坐标的起始位置
-    std::uint16_t width = 0;        //图形宽度
-    std::uint16_t height = 0;       //图像高度
-    std::uint8_t  pixelDepth = 0;   //图像每一个像素占用的位数，例如RGB为24位，RGBA为32位
-    std::uint8_t  descriptor = 0;   //图像描述信息，可见http://paulbourke.net/dataformats/tga/
+    std::uint8_t  length;       //TGA图像Identification Field的长度
+    std::uint8_t  colorMapType; //0：不使用颜色表，1：使用颜色表
+    std::uint8_t  imageType;    //图像类型，2代表未压缩的真彩色图像，3代表未压缩的黑白图像
+    std::uint16_t cMapStart;    //颜色表首地址
+    std::uint16_t cMapLength;   //颜色表长度
+    std::uint8_t  cMapDepth;    //颜色表位数
+    std::uint16_t xOffset;      //x坐标的起始位置
+    std::uint16_t yOffset;      //y坐标的起始位置
+    std::uint16_t width;        //图形宽度
+    std::uint16_t height;       //图像高度
+    std::uint8_t  pixelDepth;   //图像每一个像素占用的位数，例如RGB为24位，RGBA为32位
+    std::uint8_t  descriptor;   //图像描述信息，可见http://paulbourke.net/dataformats/tga/
 
-    TGAHeader(){}
-    TGAHeader(unsigned int type, std::uint16_t width_, std::uint16_t height_){
+    TGAHeader():length(0),
+        colorMapType(0),
+        imageType(0),
+        cMapStart(0),
+        cMapLength(0),
+        cMapDepth(0),
+        xOffset(0),
+        yOffset(0),
+        width(0),
+        height(0),
+        pixelDepth(0),
+        descriptor(0){}
+
+    TGAHeader(unsigned int type, std::uint16_t width_, std::uint16_t height_):TGAHeader(){
         if(type == TGAType::rgb){
             imageType = 2;
             pixelDepth = 24;
@@ -63,17 +75,18 @@ struct TGAHeader{
 };
 
 struct TGAFooter{
-    std::uint32_t extend = 0; //扩展区域
-    std::uint32_t custom = 0; //开发者自定义区域
-    std::uint64_t sig1 = 0;   //签名1
-    std::uint64_t sig2 = 0;   //签名2
-    std::uint16_t end = 0;      //结束
+    std::uint32_t extend; //扩展区域
+    std::uint32_t custom; //开发者自定义区域
+    std::uint64_t sig1;   //签名1
+    std::uint64_t sig2;   //签名2
+    std::uint16_t end;      //结束
 
-    TGAFooter(){
-        sig1 = 0x4953495645555254;  //TRUEVISI
-        sig2 = 0x454C4946582D4E4F;  //ON-XFILE
-        end  = 0x002E;           
-    }
+    TGAFooter():
+        extend(0),
+        custom(0),
+        sig1(0x4953495645555254),//TRUEVISI
+        sig2(0x454C4946582D4E4F),//ON-XFILE
+        end(0x002E){}
 };
 
 #pragma pack(pop)

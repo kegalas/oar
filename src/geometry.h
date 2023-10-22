@@ -355,6 +355,19 @@ namespace geo{
     Vec<int,4> toOARColor(Vec<int,4> const & v);
     Vec<int,4> toOARColor(Vec<float,4> const & v);
 
+    template<class T>
+    Vec<T,4> standardise(Vec<T,4> & v){
+        //TODO 给所有涉及到vec4的函数添加标准化检查
+        assert(v[3]!=static_cast<T>(0));
+        v = v / v[3];
+    }
+
+    template<class T>
+    [[nodiscard]] Vec<T,4> standardised(Vec<T,4> const & v){
+        assert(v[3]!=static_cast<T>(0));
+        return v / v[3];
+    }
+
 ////////////////////////////////////////////////////////////////////////////////
 
     template<class T, size_t nRow, size_t nCol>
@@ -556,6 +569,15 @@ namespace geo{
         return ret;
     }
 
+    template<class T, size_t nRow>
+    Mat<T, nRow, 1> vec2Mat(Vec<T, nRow> const & v){
+        Mat<T, nRow, 1> ret;
+        for(size_t i=0;i<nRow;i++){
+            ret[i][0] = v[i];
+        }
+        return ret;
+    }
+
     template<class T, size_t nRow, size_t nCol>
     std::ostream& operator<<(std::ostream& out, Mat<T, nRow, nCol> const & mat){
         for(size_t i=0 ; i<nRow ; i++){
@@ -576,7 +598,7 @@ namespace geo{
     typedef Vec<float,4> OARColorf;
 
     typedef Mat<float, 4, 4> mat4f;
-    typedef Mat<int, 4, 4> mat3f;
+    typedef Mat<float, 3, 3> mat3f;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -590,14 +612,16 @@ namespace geo{
 
 ////////////////////////////////////////////////////////////////////////////////
 
-    mat4f translate(vec3f const & v);
+    mat4f translate(vec4f const & v);
     mat4f scale(float t);
-    mat4f rotate(float angle, vec3f const & v);
+//    mat4f rotate(float ridian, vec4f const & v);
 
     mat4f viewport(int width, int height);
     mat4f orthographic(float left, float right, float top, float bottom, float near, float far);
-    mat4f cameraView(vec3f const & pos, vec3f const & gaze, vec3f const & up);
+    mat4f cameraView(vec4f const & pos, vec4f const & gaze, vec4f const & up);
     mat4f prospective(float near, float far);
+
+    mat4f mat3to4(mat3f const & m);
 
 }//namespace geo
 

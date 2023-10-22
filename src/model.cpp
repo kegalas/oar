@@ -56,7 +56,7 @@ Model::~Model(){
     face_vi.clear();
 }
 
-size_t Model::getFaceSize(){
+size_t Model::getFaceNum(){
     return face_ni.size()/3;
 }
 

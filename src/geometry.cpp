@@ -294,6 +294,17 @@ geo::Vec<int,4> geo::toOARColor(float const & v){
     return ret;
 }
 
+geo::mat4f geo::mat3to4(geo::mat3f const & m){
+    geo::mat4f ret;
+    for(int i=0;i<3;i++){
+        for(int j=0;j<3;j++){
+            ret[i][j] = m[i][j];
+        }
+    }
+    ret[3][3] = 1.f;
+    return ret;
+}
+
 std::tuple<float,float,float> geo::getBarycentric(
     std::array<geo::vec2f,3> const & tri,
     geo::vec2f pt
@@ -332,12 +343,11 @@ std::tuple<float,float,float> geo::getBarycentric(
     return std::tuple<float,float,float>(alpha,beta,gamma);
 }
 
-geo::mat4f geo::translate(vec3f const & v){
+geo::mat4f geo::translate(vec4f const & v){
     mat4f ret;
-    ret[0][3] += v.x;
-    ret[1][3] += v.y;
-    ret[2][3] += v.z;
-    ret = ret;
+    ret[0][3] = v.x;
+    ret[1][3] = v.y;
+    ret[2][3] = v.z;
 
     return ret;
 }
@@ -351,18 +361,27 @@ geo::mat4f geo::scale(float t){
     return ret;
 }
 
-geo::mat4f geo::rotate( float angle, vec3f const & v){
-    mat4f ret;
-
-    return ret;
-}
+//geo::mat4f geo::rotate(float radian, vec4f const & v){
+//    //TODO 四元数实现
+//    mat4f ret;
+//    vec3f n = vec3f(normalized(v));
+//    mat4f N;
+//    N[0][0] = 0.f, N[1][1] = 0.f, N[2][2] = 0.f;
+//    N[0][1] = -n.z, N[0][2] = n.y;
+//    N[1][0] = n.z,  N[1][2] = -n.x;
+//    N[2][0] = -n.y, N[2][1] = n.x;
+//    Mat<float, 3, 1> nmat = vec2Mat(n);
+//    mat4f tmat = geo::mat3to4(nmat * transpose(nmat));
+//    ret = ret * std::cos(radian) + (1.f-std::cos(radian)) * tmat + std::sin(radian) * N;
+//    return ret;
+//}
 
 geo::mat4f geo::viewport(int width, int height){
     mat4f ret;
     ret[0][0] = width/2.f;
     ret[1][1] = height/2.f;
-    ret[0][3] = (width-1)/2.f;
-    ret[1][3] = (height-1)/2.f;
+    ret[0][3] = width/2.f;
+    ret[1][3] = height/2.f;
 
     return ret;
 }
@@ -378,31 +397,41 @@ geo::mat4f geo::orthographic(float left, float right, float top, float bottom, f
     ret[1][3] = -(top+bottom)/(top-bottom);
     ret[2][3] = -(near+far)/(near-far);
 
+    ret[3][3] = 1.f;
+
     return ret;
 }
 
-geo::mat4f geo::cameraView(vec3f const & pos, vec3f const & gaze, vec3f const & up){
+geo::mat4f geo::cameraView(vec4f const & pos, vec4f const & gaze, vec4f const & up){
+    //gaze 是z轴负半轴方向，坐标是右手系
     mat4f trans,ro;
     trans[0][3] = -pos.x;
     trans[1][3] = -pos.y;
     trans[2][3] = -pos.z;
+    vec3f gaze_ = geo::normalized(vec3f(gaze));
+    vec3f up_ = geo::normalized(vec3f(up));
 
-    vec3f tmp = geo::cross(gaze,up);
+    vec3f tmp = geo::cross(gaze_,up_);
     ro[0][0] = tmp.x;ro[0][1] = tmp.y;ro[0][2] = tmp.z;
-    ro[1][0] = up.x;ro[1][1] = up.y;ro[1][2] = up.z;
-    ro[2][0] = -gaze.x;ro[2][1] = -gaze.y;ro[2][2] = -gaze.z;
-
+    ro[1][0] = up_.x;ro[1][1] = up_.y;ro[1][2] = up_.z;
+    ro[2][0] = -gaze_.x;ro[2][1] = -gaze_.y;ro[2][2] = -gaze_.z;
 
     return ro*trans;
 }
 
 geo::mat4f geo::prospective(float near, float far){
     mat4f ret;
+    near = -near;
+    far = -far;
+    //教材上是把near平面看做-n的，才有的下面这个矩阵
+    //但是我们不这样做，我们直接n就是near平面，f就是far平面，结果上是取相反数
 
     ret[0][0] = near;
     ret[1][1] = near;
     ret[2][2] = near+far;
     ret[2][3] = -far*near;
+    ret[3][2] = 1.f;
+    ret[3][3] = 0.f;
 
     return ret;
 }
