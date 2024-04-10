@@ -1,6 +1,6 @@
-#include "tga_image.h"
-#include "raster.h"
-#include "model.h"
+#include "img/tga_image.h"
+#include "util/raster.h"
+#include "model/model.h"
 #include <ctime>
 #include <cstdlib>
 
@@ -32,7 +32,7 @@ void drawMan(){
 
     geo::mat4f py = geo::translate({0.5f,-0.5f,0.5f,1.f});
     geo::mat4f sx = geo::scale(0.5f);
-
+    
     for(int i=0;i<nface;i++){
         model.getTriangle(vert, i);
         model.getNorm(norm, i);
