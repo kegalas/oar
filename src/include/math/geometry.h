@@ -614,6 +614,9 @@ namespace geo{
 
     mat4f translate(vec4f const & v);
     mat4f scale(float t);
+    mat4f rotateX(float ridian);
+    mat4f rotateY(float ridian);
+    mat4f rotateZ(float ridian);
 //    mat4f rotate(float ridian, vec4f const & v);
 
     mat4f viewport(int width, int height);
@@ -623,6 +626,13 @@ namespace geo{
 
     mat4f mat3to4(mat3f const & m);
 
+    struct TriCoords{
+        std::array<geo::vec4f, 3> screenCoords;
+        std::array<geo::vec4f, 3> worldCoords;
+        std::array<geo::vec4f, 3> camCoords;
+        std::array<geo::vec4f, 3> norms;
+        std::array<geo::vec2f, 3> uvs;
+    };
 }//namespace geo
 
 #endif

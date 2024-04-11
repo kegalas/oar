@@ -361,6 +361,39 @@ geo::mat4f geo::scale(float t){
     return ret;
 }
 
+geo::mat4f geo::rotateZ(float ridian){
+    mat4f ret;
+
+    ret[0][0] = std::cos(ridian);
+    ret[0][1] = -std::sin(ridian);
+    ret[1][0] = std::sin(ridian);
+    ret[1][1] = std::cos(ridian);
+
+    return ret;
+}
+
+geo::mat4f geo::rotateX(float ridian){
+    mat4f ret;
+
+    ret[1][1] = std::cos(ridian);
+    ret[1][2] = -std::sin(ridian);
+    ret[2][1] = std::sin(ridian);
+    ret[2][2] = std::cos(ridian);
+
+    return ret;
+}
+
+geo::mat4f geo::rotateY(float ridian){
+    mat4f ret;
+
+    ret[0][0] = std::cos(ridian);
+    ret[0][2] = std::sin(ridian);
+    ret[2][0] = -std::sin(ridian);
+    ret[2][2] = std::cos(ridian);
+
+    return ret;
+}
+
 //geo::mat4f geo::rotate(float radian, vec4f const & v){
 //    //TODO 四元数实现
 //    mat4f ret;
