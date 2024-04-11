@@ -26,14 +26,14 @@ namespace ras{
 
     bool triangle(
         TGAImage & image,
-        std::array<geo::vec4f,3> const & points,
+        geo::TriCoords const & tcoords,
         std::array<geo::OARColor,3> const & colors,
         float zbuffer[]
     );
 
-//    bool initZBuffer(float *zb, int width, int height);
+    bool initZBuffer(float * & zb, int width, int height);
 
-//    bool deleteZBuffer(float *zb);
+    bool deleteZBuffer(float * & zb);
 
     geo::vec2i world2screen(geo::vec4f v, int width, int height);
 }//namespace res

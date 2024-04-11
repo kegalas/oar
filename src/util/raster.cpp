@@ -3,6 +3,7 @@
 #include <tuple>
 
 #include "util/raster.h"
+#include "math/geometry.h"
 
 bool ras::line(
     TGAImage & image,
@@ -103,8 +104,8 @@ bool ras::triangle(
     std::array<geo::vec2i,3> screenPoints;
 
     for(int i=0;i<3;i++){
-        screenPoints[i][0] = (int)(points[i][0] / points[i].w+.5f);
-        screenPoints[i][1] = (int)(points[i][1] / points[i].w+.5f);
+        screenPoints[i][0] = (int)(points[i][0]+.5f);
+        screenPoints[i][1] = (int)(points[i][1]+.5f);
     }
 
     int maxx = 0, minx = width-1, maxy = 0, miny = height-1;
@@ -140,7 +141,7 @@ bool ras::triangle(
 
 bool ras::triangle(
     TGAImage & image,
-    std::array<geo::vec4f,3> const & points,
+    geo::TriCoords const & tcoords,
     std::array<geo::OARColor,3> const & colors,
     float zbuffer[]
 ){
@@ -150,7 +151,8 @@ bool ras::triangle(
     std::array<geo::vec2i,3> screenPoints;
 
     for(int i=0;i<3;i++){
-        screenPoints[i] = world2screen(points[i], width, height);
+        screenPoints[i][0] = (int)(tcoords.screenCoords[i][0]+.5f);
+        screenPoints[i][1] = (int)(tcoords.screenCoords[i][1]+.5f);
     }
 
     int maxx = 0, minx = image.getWidth()-1, maxy = 0, miny = image.getHeight()-1;
@@ -172,9 +174,8 @@ bool ras::triangle(
             float beta  = std::get<1> (ret);
             float gamma = std::get<2> (ret);
             if(alpha<-EPS || beta<-EPS || gamma<-EPS) continue;
-            float z = alpha * points[0].z +
-                      beta  * points[1].z +
-                      gamma * points[2].z;
+            float z = 1.f/(alpha/tcoords.camCoords[0].z+beta/tcoords.camCoords[1].z+gamma/tcoords.camCoords[2].z);
+            //float z = alpha*tcoords.screenCoords[0].z+beta*tcoords.screenCoords[1].z+gamma*tcoords.screenCoords[2].z;
             if(z<zbuffer[y*width+x]){
                 continue;
             }
@@ -191,27 +192,27 @@ bool ras::triangle(
     return true;
 }
 
-//bool ras::initZBuffer(float *zb, int width, int height){
-//    if (zb!=nullptr) {
-//        delete[] zb;
-//        zb = nullptr;
-//    }
-//    zb = new float[width * height];
+bool ras::initZBuffer(float * & zb, int width, int height){
+    if (zb!=nullptr) {
+        delete[] zb;
+        zb = nullptr;
+    }
+    zb = new float[width * height];
 
-//    for(int i=0;i<width*height;i++){
-//        zb[i] = -std::numeric_limits<float>::max();
-//    }
+    for(int i=0;i<width*height;i++){
+        zb[i] = -std::numeric_limits<float>::max();
+    }
 
-//    return true;
-//}
+    return true;
+}
 
-//bool ras::deleteZBuffer(float *zb){
-//    if (zb!=nullptr) {
-//        delete[] zb;
-//        zb = nullptr;
-//    }
-//    return true;
-//}
+bool ras::deleteZBuffer(float * & zb){
+    if (zb!=nullptr) {
+        delete[] zb;
+        zb = nullptr;
+    }
+    return true;
+}
 
 geo::vec2i ras::world2screen(geo::vec4f v, int width, int height){
     return geo::vec2i(int((v.x+1.f)*width*.5f+.5f), int((v.y+1.f)*height*.5f+.5f));

@@ -1,8 +1,0 @@
-# ninja log v5
-3	81	0	D:/Programing/Cpp/computer graphics/oar/tutorial/chapter6/build/CMakeFiles/cmake.verify_globs	2b48fc74c55e9a5e
-122	1329	7218460935986647	CMakeFiles/oar.dir/src/raster.cpp.obj	91dafc186a7e3bad
-138	1372	7218460936404805	CMakeFiles/oar.dir/src/tga_image.cpp.obj	d07161bede62a43f
-95	1409	7218460936791683	CMakeFiles/oar.dir/src/main.cpp.obj	cd077d3cee65778d
-82	1433	7218460937034172	CMakeFiles/oar.dir/src/geometry.cpp.obj	7ae2e535ffcbf94e
-108	1610	7218460938801091	CMakeFiles/oar.dir/src/model.cpp.obj	527289a1bcbf9474
-1610	1869	7218460941314690	oar.exe	56b666e94f3a654b

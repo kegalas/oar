@@ -26,6 +26,7 @@ public:
     bool getTriangle(std::array<geo::vec4f,3> & dist, size_t faceid);
     bool getNorm(std::array<geo::vec3f,3> & dist, size_t faceid);
     bool getNorm(std::array<geo::vec4f,3> & dist, size_t faceid);
+    bool getUV(std::array<geo::vec2f, 3> & dist, size_t faceid);
 };
 
 #endif
