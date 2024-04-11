@@ -294,6 +294,14 @@ geo::Vec<int,4> geo::toOARColor(float const & v){
     return ret;
 }
 
+geo::Vec<float,4> geo::toOARColorf(Vec<int, 4> const & v){
+    OARColorf ret;
+    for(int i=0;i<4;i++){
+        ret[i] = static_cast<float>(v[i])/255.f;
+    }
+    return ret;
+}
+
 geo::mat4f geo::mat3to4(geo::mat3f const & m){
     geo::mat4f ret;
     for(int i=0;i<3;i++){

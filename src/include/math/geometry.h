@@ -355,6 +355,8 @@ namespace geo{
     Vec<int,4> toOARColor(Vec<int,4> const & v);
     Vec<int,4> toOARColor(Vec<float,4> const & v);
 
+    Vec<float,4> toOARColorf(Vec<int, 4> const & v); 
+
     template<class T>
     Vec<T,4> standardise(Vec<T,4> & v){
         //TODO 给所有涉及到vec4的函数添加标准化检查

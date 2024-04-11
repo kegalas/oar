@@ -31,6 +31,17 @@ namespace ras{
         float zbuffer[]
     );
 
+    bool triangle(
+        TGAImage & image,
+        TGAImage const & tex,
+        geo::TriCoords const & tcoords,
+        geo::OARColorf const & lightColorf,
+        geo::vec4f const & lightPos,
+        geo::vec4f const & cameraPos,
+        std::array<geo::vec4f, 3> const & reflect,
+        float zbuffer[]
+    );
+
     bool initZBuffer(float * & zb, int width, int height);
 
     bool deleteZBuffer(float * & zb);

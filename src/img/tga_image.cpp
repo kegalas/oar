@@ -3,6 +3,7 @@
 #include <cstring>
 
 #include "img/tga_image.h"
+#include "math/geometry.h"
 
 TGAImage::TGAImage(std::uint16_t const width_, std::uint16_t const height_, unsigned int const type_):
     width(width_),
@@ -75,6 +76,7 @@ bool TGAImage::readFromFile(std::string const & dir){
     }
     else{
         std::cerr << "Error! Unknown image type. File: " << dir << "\n";
+        std::cerr << "image type: " << header.imageType<<"\n";
         ifs.close();
         return false;
     }
@@ -175,9 +177,36 @@ bool TGAImage::setFragment(std::uint16_t x, std::uint16_t y, geo::OARColor color
     return true;
 }
 
-//geo::OARColor TGAImage::getFragment(std::uint16_t x, std::uint16_t y){
+geo::OARColor TGAImage::getFragment(std::uint16_t x, std::uint16_t y) const {
+    x = std::max(std::uint16_t(0),x);x = std::min(std::uint16_t(width-1),x);
+    y = std::max(std::uint16_t(0),y);y = std::min(std::uint16_t(height-1),y);
+    geo::OARColor ret;
 
-//}
+    int pixelSize = TGAType::pixelSize[type];
+    size_t index = (y*width + x)*pixelSize;
+
+    if(type==TGAType::grey){
+        ret.r = data[index];
+        ret.g = data[index];
+        ret.b = data[index];
+        ret.a = 1.f;
+    }
+    else if(type==TGAType::rgb || type==TGAType::rgba){
+        ret.b = data[index];
+        ret.g = data[index+1];
+        ret.r = data[index+2];
+
+        if(type==TGAType::rgba){
+            ret.a = data[index+3];
+        }
+    }
+    else{
+        std::cerr<<"An error occured while set fragment\n";
+        return ret;
+    }
+
+    return ret;
+}
 
 bool TGAImage::flipVertically(){
     int pixelSize = TGAType::pixelSize[type];
