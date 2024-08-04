@@ -29,7 +29,7 @@ void drawMan(){
     geo::mat4f cam = geo::cameraView(cameraPos, {0.f,0.f,-1.f,1.f},{0.f,1.f,0.f,1.f});
     geo::mat4f prosp = geo::prospective(2.9f,-1000.f);
     //geo::mat4f orth = geo::orthographic(-1.f, 1.f, 1.f, -1.f, 2.f, -2.f);
-    geo::mat4f mod = geo::rotateY(PI/4);
+    geo::mat4f mod = geo::rotateY(0);
     //geo::mat4f prosp;
     //geo::mat4f mod;
     //geo::mat4f cam;
@@ -65,7 +65,7 @@ void drawSQ(){
     int nface = model.getFaceNum();
     geo::TriCoords tcoords;
     geo::vec4f kd = {.75f, .75f, .75f, 1.f};
-    geo::vec4f ks = {1.f, 1.f, 1.f, 1.f};
+    geo::vec4f ks = {0.83f, 0.83f, 0.83f, 1.f};
     geo::vec4f ka = {.2f, .2f, .2f, 1.f};
     std::array<geo::vec4f, 3> reflect = {kd, ks, ka};
 
@@ -73,7 +73,7 @@ void drawSQ(){
     geo::mat4f cam = geo::cameraView(cameraPos, {0.f,0.f,-1.f,1.f},{0.f,1.f,0.f,1.f});
     geo::mat4f prosp = geo::prospective(2.9f,-1000.f);
     //geo::mat4f orth = geo::orthographic(-1.f, 1.f, 1.f, -1.f, 2.f, -2.f);
-    geo::mat4f mod = geo::rotateY(PI/4);
+    geo::mat4f mod = geo::rotateY(0);
     //geo::mat4f prosp;
     //geo::mat4f mod;
     //geo::mat4f cam;
@@ -130,7 +130,7 @@ void drawTri(){
 }
 
 int main(){
-    drawSQ();
+    drawMan();
 
     return 0;
 }

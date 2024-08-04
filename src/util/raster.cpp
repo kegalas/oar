@@ -228,6 +228,9 @@ bool ras::triangle(
     maxy = std::min(maxy, height-1);
     miny = std::max(miny, 0);
 
+    geo::vec3f lightPos3f = lightPos;
+    geo::vec3f cameraPos3f = cameraPos;
+
     for(int x=minx;x<=maxx;x++){
         for(int y=miny;y<=maxy;y++){
             std::tuple<float,float,float> ret = geo::getBarycentric(screenPoints, geo::vec2i(x,y));
@@ -241,19 +244,22 @@ bool ras::triangle(
             }
             zbuffer[y*width+x] = z;
 
-            geo::vec2f uv = alpha*tcoords.uvs[0]+beta*tcoords.uvs[1]+gamma*tcoords.uvs[2];
+            float alpha_r = alpha / tcoords.camCoords[0].z * z;
+            float beta_r = beta / tcoords.camCoords[1].z * z;
+            float gamma_r = gamma / tcoords.camCoords[2].z * z;
+            geo::vec2f uv = alpha_r*tcoords.uvs[0]+beta_r*tcoords.uvs[1]+gamma_r*tcoords.uvs[2];
             int uvx = uv.u*tex.getWidth()+0.5f;
             int uvy = uv.v*tex.getHeight()+0.5f;
             uvx = std::min(uvx, tex.getWidth()-1);
             uvy = std::min(uvy, tex.getHeight()-1);
 
-            geo::vec4f baryWorldCoords = alpha*tcoords.worldCoords[0] + beta*tcoords.worldCoords[1] + gamma*tcoords.worldCoords[2];
-            baryWorldCoords.z = z;
-            geo::vec4f baryNorm = alpha*tcoords.norms[0] + beta*tcoords.norms[1] + gamma*tcoords.norms[2];
-            
-            geo::vec4f l = geo::normalized(lightPos-baryWorldCoords);
-            geo::vec4f v = geo::normalized(cameraPos-baryWorldCoords);
-            geo::vec4f h = geo::normalized(v+l);
+            geo::vec4f baryWorldCoords = alpha_r*tcoords.worldCoords[0] + beta_r*tcoords.worldCoords[1] + gamma_r*tcoords.worldCoords[2];
+            geo::vec3f baryNorm = alpha_r*tcoords.norms[0] + beta_r*tcoords.norms[1] + gamma_r*tcoords.norms[2];
+            baryNorm = geo::normalized(baryNorm);
+
+            geo::vec3f l = geo::normalized(lightPos3f-(geo::vec3f)baryWorldCoords);
+            geo::vec3f v = geo::normalized(cameraPos3f-(geo::vec3f)baryWorldCoords);
+            geo::vec3f h = geo::normalized(v+l);
             geo::OARColorf ld = kd * lightColorf * std::max(0.f, geo::dot(l, baryNorm));
             geo::OARColorf ls = ks * lightColorf * std::pow(std::max(0.f,geo::dot(h, baryNorm)), 100.f);
             geo::OARColorf la = ka * geo::vec4f(.3f, .3f, .3f, 1.f);
