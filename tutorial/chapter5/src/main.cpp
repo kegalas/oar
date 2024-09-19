@@ -11,7 +11,7 @@ geo::OARColorf light = {1.f, 1.f, 1.f, 1.f};//光的强度
 geo::vec4f camera = {0.f, 0.f, 2.f, 1.f};//相机的位置
 
 int main(){
-    Model model("../obj/african_head.obj");
+    Model model("../obj/teapot.obj");
     TGAImage image(width,height,TGAType::rgb);
     int nface = model.getFaceSize();
     std::array<geo::vec4f,3> vert;
@@ -44,7 +44,7 @@ int main(){
         }
         if(check) ras::triangle(image,screen,color);
     }
-    image.writeToFile("./af.tga");
+    image.writeToFile("./tp.tga");
 
     return 0;
 }
