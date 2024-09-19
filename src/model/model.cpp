@@ -95,7 +95,7 @@ bool Model::getNorm(std::array<geo::vec4f,3> & dist, size_t faceid){
 
 bool Model::getUV(std::array<geo::vec2f, 3> & dist, size_t faceid){
     for(int i=0;i<3;i++){
-        dist[i] = tex_coords[face_ti[face_id*3+i]];
+        dist[i] = tex_coords[face_ti[faceid*3+i]];
     }
     return true;
 }

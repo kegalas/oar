@@ -16,7 +16,7 @@ float const PI = std::acos(-1.f);
 void drawMan(){
     Model model("../obj/african_head.obj");
     TGAImage image(width,height,TGAType::rgb);
-    TGAImage diffTex("../texture/african_head_diffuse.tga");
+    //TGAImage diffTex("../texture/african_head_diffuse.tga");
     int nface = model.getFaceNum();
     geo::TriCoords tcoords;
     std::array<geo::OARColor,3> color;
