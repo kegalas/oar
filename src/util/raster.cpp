@@ -1,8 +1,10 @@
+#include <array>
 #include <cassert>
 #include <cmath>
 #include <tuple>
 
 #include "util/raster.h"
+#include "img/tga_image.h"
 #include "math/geometry.h"
 
 bool ras::line(
@@ -185,6 +187,88 @@ bool ras::triangle(
                 alpha*geo::vec4f(colors[0]) +
                 beta*geo::vec4f(colors[1]) +
                 gamma*geo::vec4f(colors[2]));
+            image.setFragment(x,y,color);
+        }
+    }
+
+    return true;
+}
+
+bool ras::triangle(
+    TGAImage & image,
+    TGAImage const & tex,
+    geo::TriCoords const & tcoords,
+    geo::OARColorf const & lightColorf,
+    geo::vec4f const & lightPos,
+    geo::vec4f const & cameraPos,
+    std::array<geo::vec4f, 3> const & reflect,
+    float zbuffer[]
+){
+    float const EPS = 1e-5;
+    int width = image.getWidth(), height = image.getHeight();
+
+    std::array<geo::vec2i,3> screenPoints;
+
+    for(int i=0;i<3;i++){
+        screenPoints[i][0] = (int)(tcoords.screenCoords[i][0]+.5f);
+        screenPoints[i][1] = (int)(tcoords.screenCoords[i][1]+.5f);
+    }
+
+    auto const & [kd, ks, ka] = reflect;
+    
+    int maxx = 0, minx = image.getWidth()-1, maxy = 0, miny = image.getHeight()-1;
+    for(int i=0;i<3;i++){
+        maxx = std::max(maxx, screenPoints[i].x);
+        minx = std::min(minx, screenPoints[i].x);
+        maxy = std::max(maxy, screenPoints[i].y);
+        miny = std::min(miny, screenPoints[i].y);
+    }
+    maxx = std::min(maxx, width-1);
+    minx = std::max(minx, 0);
+    maxy = std::min(maxy, height-1);
+    miny = std::max(miny, 0);
+
+    geo::vec3f lightPos3f = lightPos;
+    geo::vec3f cameraPos3f = cameraPos;
+
+    for(int x=minx;x<=maxx;x++){
+        for(int y=miny;y<=maxy;y++){
+            std::tuple<float,float,float> ret = geo::getBarycentric(screenPoints, geo::vec2i(x,y));
+            float alpha = std::get<0> (ret);
+            float beta  = std::get<1> (ret);
+            float gamma = std::get<2> (ret);
+            if(alpha<-EPS || beta<-EPS || gamma<-EPS) continue;
+            float z = 1.f/(alpha/tcoords.camCoords[0].z+beta/tcoords.camCoords[1].z+gamma/tcoords.camCoords[2].z);
+            if(z<zbuffer[y*width+x]){
+                continue;
+            }
+            zbuffer[y*width+x] = z;
+
+            float alpha_r = alpha / tcoords.camCoords[0].z * z;
+            float beta_r = beta / tcoords.camCoords[1].z * z;
+            float gamma_r = gamma / tcoords.camCoords[2].z * z;
+            geo::vec2f uv = alpha_r*tcoords.uvs[0]+beta_r*tcoords.uvs[1]+gamma_r*tcoords.uvs[2];
+            uv.u = uv.u - std::floor(uv.u);
+            uv.v = uv.v - std::floor(uv.v); // 环绕方式为重复
+            int uvx = uv.u*tex.getWidth()+0.5f;
+            int uvy = uv.v*tex.getHeight()+0.5f;
+
+            geo::vec4f baryWorldCoords = alpha_r*tcoords.worldCoords[0] + beta_r*tcoords.worldCoords[1] + gamma_r*tcoords.worldCoords[2];
+            geo::vec3f baryNorm = alpha_r*tcoords.norms[0] + beta_r*tcoords.norms[1] + gamma_r*tcoords.norms[2];
+            baryNorm = geo::normalized(baryNorm);
+
+            geo::vec3f l = geo::normalized(lightPos3f-(geo::vec3f)baryWorldCoords);
+            geo::vec3f v = geo::normalized(cameraPos3f-(geo::vec3f)baryWorldCoords);
+            geo::vec3f h = geo::normalized(v+l);
+            geo::OARColorf ld = kd * lightColorf * std::max(0.f, geo::dot(l, baryNorm));
+            geo::OARColorf ls = ks * lightColorf * std::pow(std::max(0.f,geo::dot(h, baryNorm)), 100.f);
+            geo::OARColorf la = ka * geo::vec4f(.3f, .3f, .3f, 1.f);
+
+            auto baryLight = ld+ls+la;
+            
+            geo::OARColorf colorf = geo::toOARColorf(tex.getFragment(uvx, uvy));
+            geo::OARColor color = geo::toOARColor(baryLight*colorf);
+            
             image.setFragment(x,y,color);
         }
     }

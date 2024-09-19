@@ -8,7 +8,7 @@ int const width = 1500;
 int const height = 1500;//设置输出图片的长宽
 
 int main(){
-    Model model("../obj/african_head.obj");//读取我们的模型
+    Model model("../obj/teapot.obj");//读取我们的模型
     TGAImage image(width,height,TGAType::rgb);//新建一个图对象
     int nface = model.getFaceSize();//获取三角面的总数
     std::array<geo::vec4f,3> vert;//读取顶点坐标
@@ -23,7 +23,7 @@ int main(){
         }
         ras::triangle(image,screen,color);//绘制三角形i号
     }
-    image.writeToFile("./af.tga");//写入图像文件
+    image.writeToFile("./tp.tga");//写入图像文件
 
     return 0;
 }
