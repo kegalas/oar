@@ -248,10 +248,10 @@ bool ras::triangle(
             float beta_r = beta / tcoords.camCoords[1].z * z;
             float gamma_r = gamma / tcoords.camCoords[2].z * z;
             geo::vec2f uv = alpha_r*tcoords.uvs[0]+beta_r*tcoords.uvs[1]+gamma_r*tcoords.uvs[2];
+            uv.u = uv.u - std::floor(uv.u);
+            uv.v = uv.v - std::floor(uv.v); // 环绕方式为重复
             int uvx = uv.u*tex.getWidth()+0.5f;
             int uvy = uv.v*tex.getHeight()+0.5f;
-            uvx = std::min(uvx, tex.getWidth()-1);
-            uvy = std::min(uvy, tex.getHeight()-1);
 
             geo::vec4f baryWorldCoords = alpha_r*tcoords.worldCoords[0] + beta_r*tcoords.worldCoords[1] + gamma_r*tcoords.worldCoords[2];
             geo::vec3f baryNorm = alpha_r*tcoords.norms[0] + beta_r*tcoords.norms[1] + gamma_r*tcoords.norms[2];
