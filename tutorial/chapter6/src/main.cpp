@@ -11,8 +11,8 @@ geo::OARColorf light = {1.f, 1.f, 1.f, 1.f};
 geo::vec4f camera = {0.f, 0.f, 3.f, 1.f};
 float const PI = std::acos(-1.f);
 
-void drawMan(){
-    Model model("../obj/african_head.obj");
+void drawTeapot(){
+    Model model("../obj/teapot.obj");
     TGAImage image(width,height,TGAType::rgb);
     int nface = model.getFaceNum();
     std::array<geo::vec4f,3> vert;
@@ -56,7 +56,7 @@ void drawMan(){
         }
         if(check) ras::triangle(image,screen,color);
     }
-    image.writeToFile("./af.tga");
+    image.writeToFile("./tp.tga");
 }
 
 void drawTri(){
@@ -87,7 +87,7 @@ void drawTri(){
 }
 
 int main(){
-    drawMan();
+    drawTeapot();
 
     return 0;
 }
