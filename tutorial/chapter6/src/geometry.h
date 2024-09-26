@@ -614,6 +614,9 @@ namespace geo{
 
     mat4f translate(vec4f const & v);
     mat4f scale(float t);
+    mat4f rotateX(float ridian);
+    mat4f rotateY(float ridian);
+    mat4f rotateZ(float ridian);
 
     mat4f viewport(int width, int height);
     mat4f orthographic(float left, float right, float top, float bottom, float near, float far);
