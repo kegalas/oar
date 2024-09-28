@@ -461,17 +461,32 @@ geo::mat4f geo::cameraView(vec4f const & pos, vec4f const & gaze, vec4f const & 
     return ro*trans;
 }
 
-geo::mat4f geo::prospective(float near, float far){
+geo::mat4f geo::perspective(float near, float far){
     mat4f ret;
-    near = -near;
-    far = -far;
-    //教材上是把near平面看做-n的，才有的下面这个矩阵
-    //但是我们不这样做，我们直接n就是near平面，f就是far平面，结果上是取相反数
 
     ret[0][0] = near;
     ret[1][1] = near;
     ret[2][2] = near+far;
     ret[2][3] = -far*near;
+    ret[3][2] = 1.f;
+    ret[3][3] = 0.f;
+
+    return ret;
+}
+
+geo::mat4f geo::perspectiveFov(float fovy, float aspect, float near, float far){
+    mat4f ret;
+
+    // 以下的计算其实可以分式化简，但出于直观就保留原样了
+    float tanv = std::tan(fovy/2.f);
+    float t = std::abs(near) * tanv;
+    float b = -t;
+    float r = t * aspect;
+    float l = -r;
+
+    ret[0][0] = 2*near/(r-l); ret[0][2] = (l+r)/(l-r);
+    ret[1][1] = 2*near/(t-b); ret[1][2] = (b+t)/(b-t);
+    ret[2][2] = (near+far)/(near-far);  ret[2][3] = (2*near*far)/(far-near);
     ret[3][2] = 1.f;
     ret[3][3] = 0.f;
 

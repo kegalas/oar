@@ -621,7 +621,8 @@ namespace geo{
     mat4f viewport(int width, int height);
     mat4f orthographic(float left, float right, float top, float bottom, float near, float far);
     mat4f cameraView(vec4f const & pos, vec4f const & gaze, vec4f const & up);
-    mat4f prospective(float near, float far);
+    mat4f perspective(float near, float far);
+    mat4f perspectiveFov(float fovy, float aspect, float near, float far);
 
     mat4f mat3to4(mat3f const & m);
 
