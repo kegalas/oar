@@ -25,13 +25,14 @@ void drawTeapot(){
 
     geo::mat4f view = geo::viewport(width, height);
     geo::mat4f cam = geo::cameraView(camera, {0.f,0.f,-1.f,1.f},{0.f,1.f,0.f,1.f});
-    geo::mat4f prosp = geo::prospective(2.9f,-1000.f);
-    geo::mat4f orth = geo::orthographic(-1.f, 1.f, 1.f, -1.f, 2.f, -2.f);
+    geo::mat4f prosp = geo::prospective(-0.01f,-1000.f);
+    geo::mat4f orth = geo::orthographic(-1.f, 1.f, 1.f, -1.f, -0.1f, -500.f);
     geo::mat4f trans;
-    trans = view * orth * prosp * cam * trans;
+    trans = orth * prosp * cam * trans;
 
     geo::mat4f py = geo::translate({0.5f,-0.5f,0.5f,1.f});
     geo::mat4f sx = geo::scale(0.5f);
+    geo::mat4f ry = geo::rotateY(PI/4);
 
     for(int i=0;i<nface;i++){
         model.getTriangle(vert, i);
@@ -51,8 +52,9 @@ void drawTeapot(){
             geo::OARColorf ls = ks * light * std::pow(std::max(0.f,geo::dot(norm[j],h)), 100.f);
             geo::OARColorf la = ka * geo::vec4f(.3f, .3f, .3f, 1.f);
             color[j] = geo::toOARColor(ld+ls+la);
-            screen[j] = trans * py * sx * vert[j];
-            //screen[j] /= screen[j].w;//这一句非常重要
+            screen[j] = trans * py * sx * ry * vert[j];
+            screen[j] /= screen[j].w;//这一句非常重要
+            screen[j] = view * screen[j];
         }
         if(check) ras::triangle(image,screen,color);
     }
@@ -63,7 +65,7 @@ void drawTri(){
     TGAImage image(width,height,TGAType::rgb);
 
     std::array<geo::vec4f, 3> tri;
-    std::array<geo::vec2i, 3> screen;
+    std::array<geo::vec4f, 3> screen;
     std::array<geo::OARColor, 3> color;
     tri[0] = {-1.f,1.f,0.f,1.f};
     tri[1] = {1.f,0.f,0.f,1.f};
@@ -73,12 +75,17 @@ void drawTri(){
     color[2] = {0,0,255,255};
 
     geo::mat4f view = geo::viewport(width, height);
-    geo::mat4f cam = geo::cameraView(camera, {0.f,0.f,-1.f,1.f}, {0.f,1.f,0.f,1.f});
+    geo::mat4f cam = geo::cameraView(camera, {0.f,0.f,-1.f,1.f},{0.f,1.f,0.f,1.f});
+    geo::mat4f prosp = geo::prospective(-0.01f,-1e7f);
+    geo::mat4f orth = geo::orthographic(-1.f, 1.f, 1.f, -1.f, -0.1f, -1000.f);
     geo::mat4f trans;
-    trans = view * cam * trans;
+    trans = orth * prosp * cam * trans;
 
     for(int i=0;i<3;i++){
-        screen[i] = trans * tri[i];
+        screen[i] = cam * tri[i];
+        screen[i] = prosp * screen[i];
+        screen[i] /= screen[i].w;//这一句非常重要
+        screen[i] = view * screen[i];
     }
 
     ras::triangle(image, screen, color);
@@ -87,7 +94,8 @@ void drawTri(){
 }
 
 int main(){
-    drawTeapot();
+    // drawTeapot();
+    drawTri();
 
     return 0;
 }

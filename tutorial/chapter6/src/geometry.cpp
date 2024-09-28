@@ -433,8 +433,8 @@ geo::mat4f geo::cameraView(vec4f const & pos, vec4f const & gaze, vec4f const & 
 
 geo::mat4f geo::prospective(float near, float far){
     mat4f ret;
-    near = -near;
-    far = -far;
+    //near = -near;
+    //far = -far;
     //教材上是把near平面看做-n的，才有的下面这个矩阵
     //但是我们不这样做，我们直接n就是near平面，f就是far平面，结果上是取相反数
 
