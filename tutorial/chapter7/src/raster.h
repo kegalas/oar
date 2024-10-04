@@ -24,10 +24,31 @@ namespace ras{
         std::array<geo::OARColor,3> const & colors
     );
 
-    bool triangle(
+    bool triangleGouraud(
         TGAImage & image,
-        std::array<geo::vec4f,3> const & points,
-        std::array<geo::OARColor,3> const & colors,
+        geo::TriCoords const & tcoords,
+        std::array<geo::OARColorf, 3> const & colors,
+        geo::vec4f const & lightPos, // 光的位置
+        geo::OARColorf const & light, // 光的颜色
+        geo::vec4f const & cameraPos //相机的位置
+    );
+
+    bool trianglePhong(
+        TGAImage & image,
+        geo::TriCoords const & tcoords,
+        std::array<geo::OARColorf, 3> const & colors,
+        geo::vec4f const & lightPos, // 光的位置
+        geo::OARColorf const & light, // 光的颜色
+        geo::vec4f const & cameraPos //相机的位置
+    );
+
+    bool trianglePhong(
+        TGAImage & image,
+        geo::TriCoords const & tcoords,
+        std::array<geo::OARColorf, 3> const & colors,
+        geo::vec4f const & lightPos, // 光的位置
+        geo::OARColorf const & light, // 光的颜色
+        geo::vec4f const & cameraPos, //相机的位置
         float zbuffer[]
     );
 

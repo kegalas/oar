@@ -626,6 +626,12 @@ namespace geo{
 
     mat4f mat3to4(mat3f const & m);
 
+    struct TriCoords{
+        std::array<geo::vec4f, 3> screenCoords;
+        std::array<geo::vec4f, 3> worldCoords;
+        std::array<geo::vec4f, 3> norms;
+    };
+
 }//namespace geo
 
 #endif
