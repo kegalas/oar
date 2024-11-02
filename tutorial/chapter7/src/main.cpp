@@ -36,8 +36,7 @@ void drawTeapot(){
         geo::mat4f py = geo::translate({0.0f, 0.0f, 0.1f, 1.f});
         geo::mat4f rx = geo::rotateX(PI/4.0f);
         geo::mat4f ry = geo::rotateY(-PI/8.0f);
-        geo::mat4f sx = geo::scale(0.5f);
-        // geo::mat4f sx = geo::scale(1.5f);
+        geo::mat4f sx = geo::scale(1.5f);
         geo::mat4f trans_inv = geo::transpose(geo::inverse(py*ry*rx*sx));
         keep3x3(trans_inv);
 

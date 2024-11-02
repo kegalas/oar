@@ -66,7 +66,7 @@ void drawTeapot(){
     orth = geo::orthographic(-1.f, 1.f, 1.f, -1.f, -0.01f, -1000.f);
     trans = orth * persp * cam;
     paint(trans, image3);
-    image3.writeToFile("./tp3.tga"); // 应当没图
+    image3.writeToFile("./tp3.tga"); // 应当几乎看不见
 }
 
 void drawSQ(){
@@ -108,8 +108,8 @@ void drawSQ(){
 }
 
 int main(){
-    // drawTeapot();
-    drawSQ();
+    drawTeapot();
+    // drawSQ();
 
     return 0;
 }

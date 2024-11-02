@@ -300,6 +300,10 @@ std::tuple<float,float,float> geo::getBarycentric(
     geo::vec3f v1 = geo::vec3f(pa.x,ab.x,ac.x);
     geo::vec3f v2 = geo::vec3f(pa.y,ab.y,ac.y);
     geo::vec3f v = geo::cross(v1,v2);
+    
+    // 如果三角形退化成一条线或者一个点
+    if (std::abs(v.x)<1e-9) return std::tuple<float,float,float>(-1.f, -1.f, -1.f);
+    
     v = v/v.x;
 
     float beta = v.y;
@@ -318,6 +322,10 @@ std::tuple<float,float,float> geo::getBarycentric(
     geo::vec3f v1 = geo::vec3f(pa.x*1.f,ab.x*1.f,ac.x*1.f);
     geo::vec3f v2 = geo::vec3f(pa.y*1.f,ab.y*1.f,ac.y*1.f);
     geo::vec3f v = geo::cross(v1,v2);
+    
+    // 如果三角形退化成一条线或者一个点
+    if (std::abs(v.x)<1e-9) return std::tuple<float,float,float>(-1.f, -1.f, -1.f);
+    
     v = v/v.x;
 
     float beta = v.y;

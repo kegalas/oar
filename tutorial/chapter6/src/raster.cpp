@@ -175,12 +175,13 @@ bool ras::triangleGouraud(
         geo::vec4f l = geo::normalized(lightPos-tcoords.worldCoords[i]); //顶点到光源的单位向量
         geo::vec4f v = geo::normalized(cameraPos-tcoords.worldCoords[i]); //顶点到相机的单位向量
         geo::vec4f h = geo::normalized(v+l); //半程向量
-        float value = geo::dot(l,tcoords.norms[i]); //我们直接将dot(l,n)<0的三角形不进行绘制
+        geo::vec4f norm = geo::normalized(tcoords.norms[i]);
+        float value = geo::dot(l,norm); //我们直接将dot(l,n)<0的三角形不进行绘制
         if(value<0.f){
             return true;
         }
-        geo::OARColorf ld = kd * light * value; //因为我们还没学zbuffer，如果用max的话会绘制全黑的三角形
-        geo::OARColorf ls = ks * light * std::pow(std::max(0.f,geo::dot(tcoords.norms[i],h)), 100.f);
+        geo::OARColorf ld = kd * light * value;
+        geo::OARColorf ls = ks * light * std::pow(std::max(0.f,geo::dot(norm,h)), 100.f);
         geo::OARColorf la = ka * geo::vec4f(.3f, .3f, .3f, 1.f); //三种光强
         intensity[i] = ld + ls + la;
     }
@@ -254,19 +255,20 @@ bool ras::trianglePhong(
             geo::vec4f l = geo::normalized(lightPos-world); //顶点到光源的单位向量
             geo::vec4f v = geo::normalized(cameraPos-world); //顶点到相机的单位向量
             geo::vec4f h = geo::normalized(v+l); //半程向量
+            geo::normalize(norm); // 不进行单位化，specular就会过强
 
             float value = geo::dot(l, norm); //我们直接将dot(l,n)<0的点忽略
             if(value<0.f){
                 continue;
             }
-            geo::OARColorf ld = kd * light * value; //因为我们还没学zbuffer，如果用max的话会绘制全黑的三角形
+            geo::OARColorf ld = kd * light * value;
             geo::OARColorf ls = ks * light * std::pow(std::max(0.f,geo::dot(norm, h)), 100.f);
             geo::OARColorf la = ka * geo::vec4f(.3f, .3f, .3f, 1.f); //三种光强
             geo::vec4f intensity = ld + ls + la;
 
             geo::OARColor color = geo::toOARColor(
                 (alpha * colors[0] + beta  * colors[1] + gamma * colors[2]) * intensity
-                );
+            );
             // 最终物体的颜色是 自身颜色*光照颜色
             image.setFragment(x,y,color);
         }

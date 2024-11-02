@@ -87,7 +87,7 @@ bool Model::getNorm(std::array<geo::vec3f,3> & dist, size_t faceid){
 
 bool Model::getNorm(std::array<geo::vec4f,3> & dist, size_t faceid){
     for(int i=0;i<3;i++){
-        dist[i] = geo::vec4f(norms[face_ni[faceid*3+i]],1.f);
+        dist[i] = geo::vec4f(norms[face_ni[faceid*3+i]],0.f);
     }
     return true;
 }
