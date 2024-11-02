@@ -1,13 +1,6 @@
-#include "math/geometry.h"
+#include "geometry.h"
 
 ////////////////////////////////////////////////////////////////////////////////
-// TODO: use a more generic function to implement type conversion of geo::Vec
-
-//template<size_t U,size_t V>
-//geo::Vec<int,U>::Vec(geo::Vec<int,V> const & v, std::initializer_list<int> const & iList){
-
-//}
-
 template<> template<>
 geo::Vec<float,4>::Vec(geo::Vec<float, 2> const & v, float const z_, float const w_){
     x = v.x;
@@ -294,14 +287,6 @@ geo::Vec<int,4> geo::toOARColor(float const & v){
     return ret;
 }
 
-geo::Vec<float,4> geo::toOARColorf(Vec<int, 4> const & v){
-    OARColorf ret;
-    for(int i=0;i<4;i++){
-        ret[i] = static_cast<float>(v[i])/255.f;
-    }
-    return ret;
-}
-
 geo::mat4f geo::mat3to4(geo::mat3f const & m){
     geo::mat4f ret;
     for(int i=0;i<3;i++){
@@ -409,21 +394,6 @@ geo::mat4f geo::rotateY(float ridian){
 
     return ret;
 }
-
-//geo::mat4f geo::rotate(float radian, vec4f const & v){
-//    //TODO 四元数实现
-//    mat4f ret;
-//    vec3f n = vec3f(normalized(v));
-//    mat4f N;
-//    N[0][0] = 0.f, N[1][1] = 0.f, N[2][2] = 0.f;
-//    N[0][1] = -n.z, N[0][2] = n.y;
-//    N[1][0] = n.z,  N[1][2] = -n.x;
-//    N[2][0] = -n.y, N[2][1] = n.x;
-//    Mat<float, 3, 1> nmat = vec2Mat(n);
-//    mat4f tmat = geo::mat3to4(nmat * transpose(nmat));
-//    ret = ret * std::cos(radian) + (1.f-std::cos(radian)) * tmat + std::sin(radian) * N;
-//    return ret;
-//}
 
 geo::mat4f geo::viewport(int width, int height){
     mat4f ret;

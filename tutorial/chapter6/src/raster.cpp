@@ -176,10 +176,14 @@ bool ras::triangleGouraud(
         geo::vec4f v = geo::normalized(cameraPos-tcoords.worldCoords[i]); //顶点到相机的单位向量
         geo::vec4f h = geo::normalized(v+l); //半程向量
         geo::vec4f norm = geo::normalized(tcoords.norms[i]);
-        float value = geo::dot(l,norm); //我们直接将dot(l,n)<0的三角形不进行绘制
+        float value = geo::dot(l,norm);
         if(value<0.f){
             return true;
         }
+        // 我们直接将dot(l,n)<0的点忽略
+        // 按正常算法，value应该是std::max(0.f, geo::dot(l, norm))。但是我们这里还没有zbuffer，使用max会让一部分茶壶背后光照不到的显示在前面
+        // 方便展示先这样操作。但这也会导致有些三角面缺失。因为虽然直接光照不到，还有环境光照射，不会是纯黑的三角形。
+        
         geo::OARColorf ld = kd * light * value;
         geo::OARColorf ls = ks * light * std::pow(std::max(0.f,geo::dot(norm,h)), 100.f);
         geo::OARColorf la = ka * geo::vec4f(.3f, .3f, .3f, 1.f); //三种光强
@@ -257,11 +261,15 @@ bool ras::trianglePhong(
             geo::vec4f h = geo::normalized(v+l); //半程向量
             geo::normalize(norm); // 不进行单位化，specular就会过强
 
-            float value = geo::dot(l, norm); //我们直接将dot(l,n)<0的点忽略
+            float value = geo::dot(l, norm);
             if(value<0.f){
                 continue;
             }
             geo::OARColorf ld = kd * light * value;
+            // 我们直接将dot(l,n)<0的点忽略
+            // 按正常算法，value应该是std::max(0.f, geo::dot(l, norm))。但是我们这里还没有zbuffer，使用max会让一部分茶壶背后光照不到的显示在前面
+            // 方便展示先这样操作。但这也会导致有些三角面缺失。因为虽然直接光照不到，还有环境光照射，不会是纯黑的三角形。
+            
             geo::OARColorf ls = ks * light * std::pow(std::max(0.f,geo::dot(norm, h)), 100.f);
             geo::OARColorf la = ka * geo::vec4f(.3f, .3f, .3f, 1.f); //三种光强
             geo::vec4f intensity = ld + ls + la;

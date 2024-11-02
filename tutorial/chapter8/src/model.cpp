@@ -1,9 +1,8 @@
+#include "model.h"
+#include "geometry.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
-
-#include "math/geometry.h"
-#include "model/model.h"
 
 Model::Model(std::string const & dir){
     std::ifstream in;
@@ -92,11 +91,3 @@ bool Model::getNorm(std::array<geo::vec4f,3> & dist, size_t faceid){
     }
     return true;
 }
-
-bool Model::getUV(std::array<geo::vec2f, 3> & dist, size_t faceid){
-    for(int i=0;i<3;i++){
-        dist[i] = tex_coords[face_ti[faceid*3+i]];
-    }
-    return true;
-}
-

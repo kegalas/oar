@@ -9,6 +9,7 @@ int const width = 1500;
 int const height = 1500;
 geo::vec4f lightPos = {0.f, 0.f, 10.f, 1.f};
 geo::OARColorf light = {1.f, 1.f, 1.f, 1.f};
+//geo::vec4f camera = {-1.f, 0.f, 1.f, 1.f};
 geo::vec4f camera = {0.f, 0.f, 2.f, 1.f};
 float const PI = std::acos(-1.f);
 
