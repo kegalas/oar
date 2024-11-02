@@ -316,6 +316,7 @@ bool ras::trianglePhong(
             float beta  = std::get<1> (ret);
             float gamma = std::get<2> (ret);
             if(alpha<-EPS || beta<-EPS || gamma<-EPS) continue;
+
             float z = alpha * tcoords.screenCoords[0].z +
                       beta  * tcoords.screenCoords[1].z +
                       gamma * tcoords.screenCoords[2].z;
@@ -334,6 +335,7 @@ bool ras::trianglePhong(
             geo::vec4f l = geo::normalized(lightPos-world); //顶点到光源的单位向量
             geo::vec4f v = geo::normalized(cameraPos-world); //顶点到相机的单位向量
             geo::vec4f h = geo::normalized(v+l); //半程向量
+            geo::normalize(norm);
 
             float value = geo::dot(l, norm); //我们直接将dot(l,n)<0的点忽略
             if(value<0.f){
