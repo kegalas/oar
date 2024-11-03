@@ -51,7 +51,7 @@ void drawSQ(){
             tcoords.screenCoords[j] /= tcoords.screenCoords[j].w;
             tcoords.screenCoords[j] = view * tcoords.screenCoords[j];
         }
-        ras::triangle(image,diffTex,tcoords,lightColorf,lightPos,cameraPos,reflect,zbuf);
+        ras::trianglePhong(image,diffTex,tcoords,lightColorf,lightPos,cameraPos,reflect,zbuf);
     }
     image.writeToFile("./sq.tga");
 
@@ -72,7 +72,7 @@ void drawTeaPot(){
     geo::mat4f view = geo::viewport(width, height);
     geo::mat4f cam = geo::cameraView(cameraPos, {0.f,0.f,-1.f,1.f},{0.f,1.f,0.f,1.f});
     geo::mat4f persp = geo::perspectiveFov(PI/2.0f, 1.0f*width/height, -0.01f, -1000.0f);
-    geo::mat4f mod = geo::rotateY(PI/8.f)*geo::rotateX(PI/3.f*2.f);
+    geo::mat4f mod = geo::rotateY(PI/8.f)*geo::rotateX(PI/3.f*2.f)*geo::scale(1.5f);
 
     float * zbuf = nullptr;
     ras::initZBuffer(zbuf, width, height);
@@ -91,7 +91,7 @@ void drawTeaPot(){
             tcoords.screenCoords[j] /= tcoords.screenCoords[j].w;
             tcoords.screenCoords[j] = view * tcoords.screenCoords[j];
         }
-        ras::triangle(image,diffTex,tcoords,lightColorf,lightPos,cameraPos,reflect,zbuf);
+        ras::trianglePhong(image,diffTex,tcoords,lightColorf,lightPos,cameraPos,reflect,zbuf);
     }
     image.writeToFile("./tp.tga");
 
